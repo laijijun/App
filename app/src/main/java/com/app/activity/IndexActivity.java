@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,6 +38,7 @@ public class IndexActivity extends BaseActivity {
     List<Fragment> fragments;
     MenuItem menuItem;
     WebView mWebview;
+    private ProgressBar pg;
 
 
     @Override
@@ -102,11 +107,28 @@ public class IndexActivity extends BaseActivity {
                 menuItem.setChecked(true);
                 if (position == 1) {
                     mWebview = findViewById(R.id.webView);
+                    pg=findViewById(R.id.progressBar);
                     mWebview.setWebViewClient(new WebViewClient() {
                         @Override
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
                             view.loadUrl(url);
-                            return false;
+                            return true;
+                        }
+                    });
+
+                    WebSettings seting=mWebview.getSettings();
+                    seting.setJavaScriptEnabled(true);//设置webview支持javascript脚本
+                    mWebview.setWebChromeClient(new WebChromeClient(){
+                        @Override
+                        public void onProgressChanged(WebView view, int newProgress) {
+                            if(newProgress==100){
+                                pg.setVisibility(View.GONE);//加载完网页进度条消失
+                            }
+                            else{
+                                pg.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
+                                pg.setProgress(newProgress);//设置进度值
+                            }
+
                         }
                     });
                     mWebview.loadUrl(marketingUrl03);
