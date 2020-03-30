@@ -155,13 +155,13 @@ public class PersonalFragment extends Fragment {
 
     private void setState(String user_state){
         if("0".equals(user_state)){
-            user_state="已注册";
+            user_state="已注册(点击认证)";
         }else if("1".equals(user_state)){
             user_state="审核中";
         }else if("2".equals(user_state)){
             user_state="审核通过";
         }else if("3".equals(user_state)){
-            user_state="审核未通过";
+            user_state="审核未通过(点击重新认证)";
         }else if("4".equals(user_state)){
             user_state="冻结";
         }
