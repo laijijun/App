@@ -21,6 +21,7 @@ import com.app.fragment.PersonalFragment;
 import com.app.fragment.PreferentiallFragment;
 import com.app.update.UpdateVersionDialog;
 import com.app.util.SystemUtil;
+import com.blankj.utilcode.util.ActivityUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -108,7 +109,7 @@ public class IndexActivity extends BaseActivity {
                             return false;
                         }
                     });
-                    mWebview.loadUrl("alipays://platformapi/startapp?appId=20000067&url=https%3A%2F%2Fopenauth.alipay.com%2Foauth2%2FpublicAppAuthorize.htm%3Fapp_id%3D2021001143664456%26scope%3Dauth_base%26redirect_uri%3Dhttp%253A%252F%252Fbwwinds.natapp1.cc%252Facq-gateway%252Fchnl%252FauthoCallBack.do%26state%3DMDAxMTAyMjAwMzIwMTUyMjEwNDMzMDAyMDAwMDAx");
+                    mWebview.loadUrl(marketingUrl03);
                 }
             }
 
@@ -145,6 +146,7 @@ public class IndexActivity extends BaseActivity {
                 mWebview.goBack(); //goBack()表示返回WebView的上一页面
                 return true;
             } else {
+                ActivityUtils.startHomeActivity();
                 return true;
             }
 
