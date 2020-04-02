@@ -104,7 +104,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,//存储卡写入权限
             Manifest.permission.READ_EXTERNAL_STORAGE,//存储卡读取权限
             Manifest.permission.READ_PHONE_STATE,//读取手机状态权限
-            Manifest.permission.CAMERA//读取手机相机权限
+            Manifest.permission.CAMERA,//读取手机相机权限
+            Manifest.permission.RECORD_AUDIO
     };
 
     public void requestPower() {
@@ -115,8 +116,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
-                    || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, needPermissions, 1);
             } else {
                 enterMainPage();

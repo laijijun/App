@@ -20,6 +20,11 @@ android {
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
     }
+    //解决IM SDK（bmob-im）和Data SDK（bmob-sdk）集成包冲突
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/rxjava.properties'
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -30,8 +35,8 @@ android {
         debug { assets.srcDirs = ['src/debug/assets', 'src/release/assets/'] }
         main {
             jniLibs.srcDir 'libs'
-}
-}
+        }
+    }
 }
 
 dependencies {
@@ -72,4 +77,8 @@ dependencies {
 
     //AndroidUtilCode
     implementation 'com.blankj:utilcodex:1.26.0'
+
+    //配置IM SDK（bmob-im）版本和Data SDK（bmob-sdk）版本：特定版本的bmob-im依赖特定版本的bmob-sdk
+    implementation 'cn.bmob.android:bmob-im:2.1.4@aar'
+    implementation 'cn.bmob.android:bmob-sdk:3.7.3'
 }

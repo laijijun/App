@@ -1,17 +1,13 @@
 package com.app.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,7 +21,6 @@ import com.app.fragment.PersonalFragment;
 import com.app.fragment.PreferentiallFragment;
 import com.app.update.UpdateVersionDialog;
 import com.app.util.SystemUtil;
-import com.blankj.utilcode.util.ActivityUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -37,8 +32,6 @@ public class IndexActivity extends BaseActivity {
     BottomNavigationView bottomNavigationView;
     List<Fragment> fragments;
     MenuItem menuItem;
-    WebView mWebview;
-    private ProgressBar pg;
 
 
     @Override
@@ -49,17 +42,19 @@ public class IndexActivity extends BaseActivity {
         String appVersion = preferences.getString("appVersion", "");
         //检查更新
         if (Double.parseDouble(appVersion) > SystemUtil.getAppVersion(IndexActivity.this)) {
-            File file=new File(getCacheDir(),"ysf.apk");
-            String sys_md5="14480fc08932105d55b9217c6d2fb90b";
+            File file = new File(getCacheDir(), "ysf.apk");
+            String sys_md5 = "14480fc08932105d55b9217c6d2fb90b";
             //检查MD5
-            String md5=SystemUtil.getFileMd5(file);
-            if(!TextUtils.isEmpty(md5)&&sys_md5.equals(md5)){
+            String md5 = SystemUtil.getFileMd5(file);
+            if (!TextUtils.isEmpty(md5) && sys_md5.equals(md5)) {
                 //安装
                 SystemUtil.installApk(IndexActivity.this, file);
-            }else{
-                UpdateVersionDialog.show(IndexActivity.this,appVersion);
+            } else {
+                UpdateVersionDialog.show(IndexActivity.this, appVersion);
             }
         }
+
+        getScheme();
 
         //设置底部导航
         viewPager = findViewById(R.id.viewpager);
@@ -106,32 +101,7 @@ public class IndexActivity extends BaseActivity {
                 menuItem = bottomNavigationView.getMenu().getItem(position);
                 menuItem.setChecked(true);
                 if (position == 1) {
-                    mWebview = findViewById(R.id.webView);
-                    pg=findViewById(R.id.progressBar);
-                    mWebview.setWebViewClient(new WebViewClient() {
-                        @Override
-                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                            view.loadUrl(url);
-                            return true;
-                        }
-                    });
-
-                    WebSettings seting=mWebview.getSettings();
-                    seting.setJavaScriptEnabled(true);//设置webview支持javascript脚本
-                    mWebview.setWebChromeClient(new WebChromeClient(){
-                        @Override
-                        public void onProgressChanged(WebView view, int newProgress) {
-                            if(newProgress==100){
-                                pg.setVisibility(View.GONE);//加载完网页进度条消失
-                            }
-                            else{
-                                pg.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
-                                pg.setProgress(newProgress);//设置进度值
-                            }
-
-                        }
-                    });
-                    mWebview.loadUrl(marketingUrl03);
+                    initWebView(marketingUrl03);
                 }
             }
 
@@ -144,7 +114,7 @@ public class IndexActivity extends BaseActivity {
     private class FragmentAdapter extends FragmentPagerAdapter {
         List<Fragment> fragments;
 
-        public FragmentAdapter(@NonNull FragmentManager fm, List<Fragment> fragments) {
+        private FragmentAdapter(@NonNull FragmentManager fm, List<Fragment> fragments) {
             super(fm);
             this.fragments = fragments;
         }
@@ -160,20 +130,43 @@ public class IndexActivity extends BaseActivity {
             return fragments.size();
         }
     }
+    private String TAG="===========";
+    private void getScheme() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Log.i(TAG, "action:" + action);
+        Uri uri = intent.getData();
+        if (uri != null) {
+            // 完整的url信息
+            String url = uri.toString();
+            Log.i(TAG, "url:" + uri);
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (mWebview!=null&&mWebview.canGoBack()) {
-                mWebview.goBack(); //goBack()表示返回WebView的上一页面
-                return true;
-            } else {
-                ActivityUtils.startHomeActivity();
-                return true;
-            }
+            // scheme部分
+            String scheme1 = uri.getScheme();
+            Log.i(TAG, "scheme:" + scheme1);
 
+            // host部分
+            String host = uri.getHost();
+            Log.i(TAG, "host:" + host);
+
+            // port部分
+            int port = uri.getPort();
+            Log.i(TAG, "port:" + port);
+
+            // 访问路劲
+            String path = uri.getPath();
+            Log.i(TAG, "path:" + path);
+
+            List<String> pathSegments = uri.getPathSegments();
+
+            // Query部分
+            String query = uri.getQuery();
+            Log.i(TAG, "query:" + query);
+
+            //获取指定参数值
+            String success = uri.getQueryParameter("query1");
+            Log.i(TAG, "success:" + success);
         }
-        return false;
     }
 
 }

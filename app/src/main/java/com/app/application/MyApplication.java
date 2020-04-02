@@ -5,6 +5,10 @@ import android.app.Application;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
 import cn.jpush.android.api.JPushInterface;
 
 public class MyApplication extends Application {
@@ -18,5 +22,28 @@ public class MyApplication extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
         JPushInterface.setDebugMode(true);//打印log
         JPushInterface.init(this);
+
+        //集成:初始化IM SDK，并注册消息接收器
+        /*if (getApplicationInfo().packageName.equals(getMyProcessName())){
+            BmobIM.init(this);
+            BmobIM.registerDefaultMessageHandler(new ImMessageHandler());
+        }*/
+    }
+
+    /**
+     * 获取当前运行的进程名
+     * @return
+     */
+    public static String getMyProcessName() {
+        try {
+            File file = new File("/proc/" + android.os.Process.myPid() + "/" + "cmdline");
+            BufferedReader mBufferedReader = new BufferedReader(new FileReader(file));
+            String processName = mBufferedReader.readLine().trim();
+            mBufferedReader.close();
+            return processName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
